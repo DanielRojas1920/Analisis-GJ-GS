@@ -72,15 +72,17 @@ def menu():
             os.system("cls")
             try:
                 print("Método Gauss-Seidel\n")
-                if (round(det(matrix.copy(), []), 5) == 0): raise ValueError("Error")
-                index_list, flag= reorder_matrix(matrix)
+                if (round(det(matrix.copy(), [1]), 5) == 0): raise ValueError("Error")
+                index_list, flag= test_reorder_matrix(matrix)
                 print(gauss_seidel([matrix[i] for i in index_list], [b[i] for i in index_list]))
                 if (flag): print("La matriz no cumple el criterio de convergencia. La solución puede no ser la correcta. \n")
                 select = 0
                 os.system("pause")
             except Exception as err:
+                print(err)
                 if (err == KeyboardInterrupt): raise KeyboardInterrupt
-                print("La matriz no tiene soluciones únicas")
+                if (err == ValueError):print("La matriz no tiene soluciones únicas")
+                else: print("Error")
                 select = 0
                 os.system("pause")
 

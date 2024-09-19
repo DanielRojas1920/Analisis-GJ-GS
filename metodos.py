@@ -21,6 +21,38 @@ def reorder_matrix(matrix):
         if((i in result) == False): result[result.index(-1)] = i
     return result, flag
 
+def test_reorder_matrix(matrix):
+    n = len(matrix[0])
+    flag = False
+    index_list= [0]*n #Buscar las filas donde se cumple el criterio de convergencia para cada variable
+    for i in range(n): index_list[i] = [j for j in range(n) if((False in [(abs(matrix[j][z]) <= abs(matrix[j][i])) for z in range(n) if(z != i)]) != True)] + [-1]
+    result = [i[0] for i in index_list]
+    if (len(set(result)) == len(result)): return result, flag
+    better_result = [-1]*n
+    iter_index_list = [len(row)-1 for row in index_list]
+    count_index_list = [0]*n
+    index = -1
+    while True: #Buscar combinaciones en caso de tener casos repetidos o casos con variables sin convergencia
+        aux_result = [index_list[i][count_index_list[i]] for i in range(n)]
+        print(aux_result)
+        not_repeated = (len(set(aux_result)) == len(aux_result))
+        if (aux_result.count(-1) == 0 and not_repeated): return aux_result, flag
+        if (better_result.count(-1) > aux_result.count(-1) and not_repeated): better_result = aux_result.copy()
+        if (sum(count_index_list) == sum(iter_index_list)): break
+        while True:
+            if (count_index_list[index] == iter_index_list[index]):
+                count_index_list[index] = 0
+                index -= 1
+            else:
+                count_index_list[index] += 1
+                break
+    flag = True
+    for i in range(n): #Rellenar los -1 que quedaron con filas al azar
+        if (better_result.count(-1) == 0): break
+        if((i in result) == False): result[result.index(-1)] = i
+    return result, flag
+
+
 def gauss_seidel(matrix,b):
     iter = 0
     n = len(matrix[0])
@@ -51,13 +83,27 @@ def gauss_jordan(matrix, matrix_str = ""):
 
     
 
-
+"""
 a = [[0.1,7.0,-0.3],
-            [3,-0.1,-0.2],
-            [0.3,-0.2,-10],]
+    [3,-0.1,-0.2],
+    [0.3,-0.2,-10],]
 b = [-19.3, 7.85, 71.40]
 
+a = [[1,2,],
+    [4,5,],]
+b = [3, 6]
 
-print(det(a.copy(), [1]))
+index_list = test_reorder_matrix(a)
+
+
+print([a[i] for i in index_list])
+
+a = [[2,2,],
+    [1,5,],]
+b = [5, 3]
+
+index_list = test_reorder_matrix(a)
+"""
+
 
     
